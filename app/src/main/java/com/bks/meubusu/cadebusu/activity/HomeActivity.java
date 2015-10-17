@@ -1,0 +1,246 @@
+package com.bks.meubusu.cadebusu.activity;
+
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.SearchView;
+import android.widget.TextView;
+
+import com.bks.meubusu.cadebusu.R;
+import com.bks.meubusu.cadebusu.adapter.LinhaCustomItemAdapter;
+import com.bks.meubusu.cadebusu.model.LinhaDTO;
+import com.bks.meubusu.cadebusu.util.TransactionAction;
+import com.bks.meubusu.cadebusu.util.Util;
+import com.bks.meubusu.cadebusu.util.Webservice;
+
+import org.json.JSONException;
+
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+
+public class HomeActivity extends AppCompatActivity {
+
+    final Webservice ws = new Webservice();
+    final Util util = new Util();
+
+    ListView listaLinhas ;
+    SearchView inputSearch;
+    LinhaCustomItemAdapter listaLinhasAdapter;
+
+    ProgressDialog mProgressDialog;
+    AlertDialog.Builder alertDialogBuilder;
+
+    public void AjustaLayout(){
+        //MUDA COR DA ACTION BAR
+        setContentView(R.layout.activity_home);
+
+        View view = this.getWindow().getDecorView();
+        view.setBackgroundColor(Color.parseColor("#2E2E2E"));
+
+        //AJUSTA ACTION BAR
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setDisplayShowTitleEnabled(false);
+
+        LayoutInflater inflator = (LayoutInflater) this .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View v = inflator.inflate(R.layout.action_bar_custom_linhas, null);
+
+        actionBar.setCustomView(v);
+
+    }
+
+    public void InicializaInputSearch(){
+        inputSearch = (SearchView) findViewById(R.id.input_search);
+
+        //COR BRANCA NO HINT DA SEARCHVIEW
+        int searchTextId = inputSearch.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
+        TextView searchText = (TextView) inputSearch.findViewById(searchTextId);
+        if (searchText!=null) {
+            searchText.setTextColor(Color.WHITE);
+            searchText.setHintTextColor(Color.WHITE);
+        }
+
+        inputSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                callSearch(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+//              if (searchView.isExpanded() && TextUtils.isEmpty(newText)) {
+                callSearch(newText);
+//              }
+                return true;
+            }
+
+            public void callSearch(final String query) {
+                listaLinhasAdapter.getFilter().filter(query);
+                listaLinhasAdapter.notifyDataSetInvalidated();
+            }
+        });
+
+    }
+
+    private void RefreshTable(List<LinhaDTO> novaLista){
+        listaLinhasAdapter = new LinhaCustomItemAdapter(this, novaLista);
+        listaLinhas.setAdapter(listaLinhasAdapter);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_home);
+
+        AjustaLayout();
+        InicializaInputSearch();
+        listaLinhas = (ListView) findViewById(R.id.listaLinhas);
+
+        //Verifica se deve fazer a consulta ou nao
+        List<LinhaDTO> linhas = LinhaDTO.listAll(LinhaDTO.class);
+
+        if (linhas.size() < 10) {
+            try {
+                getLinhasWebService();
+            } catch (JSONException e) {
+                mProgressDialog.dismiss();
+                mostrarAlertaTentarNovamente();
+                e.printStackTrace();
+            }
+        } else {
+            RefreshTable(linhas);
+        }
+
+        listaLinhas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                int itemPosition = position;
+
+                LinhaDTO itemValue = (LinhaDTO) listaLinhas.getItemAtPosition(position);
+
+                Intent mapaIntent = new Intent(HomeActivity.this, MapaActivity.class);
+                mapaIntent.putExtra("CODIGO_LINHA_SELECIONADA", itemValue.getlCodigo());
+                mapaIntent.putExtra("TITULO_LINHA_SELECIONADA", ((LinhaDTO) listaLinhas.getItemAtPosition(position)).getlNomeLinha());
+                HomeActivity.this.startActivity(mapaIntent);
+            }
+        });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        //getMenuInflater().inflate(R.menu.menu_home, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        hideSoftKeyboard();
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        hideSoftKeyboard();
+    }
+
+    public void mostrarCarregando(){
+        if (mProgressDialog == null){
+            mProgressDialog = new ProgressDialog(this);
+            mProgressDialog.setMessage("Carregando linhas... ");
+            mProgressDialog.setIndeterminate(false);
+        }
+    }
+
+    public void mostrarAlertaTentarNovamente(){
+        alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setTitle("Erro!");
+
+        alertDialogBuilder
+                .setMessage("Erro ao carregar dados! Tente novamente.")
+                .setCancelable(false)
+                .setPositiveButton("Tentar novamente", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        try {
+                            getLinhasWebService();
+                        } catch (JSONException e) {
+                            mProgressDialog.dismiss();
+                            mostrarAlertaTentarNovamente();
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    public void getLinhasWebService() throws JSONException {
+        if (!isNetworkAvailable()){
+            mostrarAlertaTentarNovamente();
+        }else{
+            mostrarCarregando();
+            mProgressDialog.show();
+            ws.getListaLinhas(this, new TransactionAction() {
+                public void perform() {
+                    for (LinhaDTO item: ws.listaLinhas){
+                        item.save();
+                    }
+                    mProgressDialog.dismiss();
+                    RefreshTable(ws.listaLinhas);
+                }
+            });
+        }
+    }
+
+    public void hideSoftKeyboard() {
+        if(getCurrentFocus()!=null) {
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        }
+    }
+
+}

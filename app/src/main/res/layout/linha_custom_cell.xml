@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#2E2E2E">
+
+    <TextView
+        android:id="@+id/codigoLinha"
+        android:layout_width="90dp"
+        android:layout_height="70dp"
+        android:layout_alignParentLeft="true"
+        android:padding="1dp"
+        android:gravity="center"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="10dp"
+        android:text="201"
+        android:textColor="#FFFFFF"
+        android:textSize="38sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tituloLinha"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:text="JARDIM CALIFORNIA"
+        android:layout_marginLeft="100dp"
+        android:textColor="#FFFFFF"
+        android:textSize="17sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/empresaLinha"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tituloLinha"
+        android:text="GRANDE LONDRINA"
+        android:textColor="#FFFFFF"
+        android:layout_marginLeft="100dp"
+        android:layout_marginTop="0dp" />
+
+    <ImageView
+        android:id="@+id/imagemSeta"
+        android:background="@drawable/icon_seta"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:padding="100dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/tituloLinha" />
+
+</RelativeLayout>
