@@ -20,15 +20,16 @@ import java.util.List;
  */
 public class LinhaCustomItemAdapter extends BaseAdapter implements Filterable {
 
-    private Activity activity;
+    private Context context;
     private LayoutInflater inflater;
     private List<LinhaDTO> originalLinhaObjects;
     private List<LinhaDTO> dislplayLinhaObjects;
 
-    public LinhaCustomItemAdapter(Activity activity, List<LinhaDTO> linhas) {
-        this.activity = activity;
+    public LinhaCustomItemAdapter(Context context, List<LinhaDTO> linhas) {
+        this.context = context;
         this.originalLinhaObjects = linhas;
         this.dislplayLinhaObjects = linhas;
+        inflater = LayoutInflater.from(context);
     }
 
     @Override
@@ -50,7 +51,7 @@ public class LinhaCustomItemAdapter extends BaseAdapter implements Filterable {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         if (inflater == null)
-            inflater = (LayoutInflater) activity
+            inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (convertView == null)
             convertView = inflater.inflate(R.layout.linha_custom_cell, null);
@@ -59,11 +60,16 @@ public class LinhaCustomItemAdapter extends BaseAdapter implements Filterable {
         TextView tTituloLinha = (TextView) convertView.findViewById(R.id.tituloLinha);
         TextView tEmpresaLinha = (TextView) convertView.findViewById(R.id.empresaLinha);
 
-        LinhaDTO m = dislplayLinhaObjects.get(position);
+        LinhaDTO m = new LinhaDTO();
+        if (position < dislplayLinhaObjects.size()){
+            m = dislplayLinhaObjects.get(position);
 
-        tCodigoLinha.setText(m.getlCodigo());
-        tTituloLinha.setText(m.getlNomeLinha());
-        tEmpresaLinha.setText(m.getlEmpresa());
+            tCodigoLinha.setText(m.getlCodigo());
+            tTituloLinha.setText(m.getlNomeLinha());
+            tEmpresaLinha.setText(m.getlEmpresa());
+        }else{
+            convertView.setVisibility(View.GONE);
+        }
 
         return convertView;
     }
@@ -74,6 +80,8 @@ public class LinhaCustomItemAdapter extends BaseAdapter implements Filterable {
             @SuppressWarnings("unchecked")
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
+                dislplayLinhaObjects = (ArrayList<LinhaDTO>) results.values;
+                notifyDataSetChanged();
             }
 
             @Override
@@ -87,13 +95,12 @@ public class LinhaCustomItemAdapter extends BaseAdapter implements Filterable {
                     }
                 }else{
                     for (LinhaDTO linha : originalLinhaObjects){
-                        if (linha.getlNomeLinha().toLowerCase().contains(constraint.toString().toLowerCase())){
+                        if ((linha.getlCodigo() + linha.getlNomeLinha()).toUpperCase().contains(constraint.toString().toUpperCase())){
                             resultados.add(linha);
                         }
                     }
                 }
 
-                dislplayLinhaObjects = resultados;
                 filterResults.values = resultados;
                 filterResults.count = resultados.size();
                 return filterResults;

@@ -43,13 +43,18 @@
         <!-- Google Maps Fragment API Key Data -->
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyCgT-2PxOdbQxKXw1rW6pEe4XweSW70P-g" />
+            android:value="AIzaSyCgT-2PxOdbQxKXw1rW6pEe4XweSW70P-g" /> <!-- release-->
 
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
 
-        <!-- SUGAR ORM DATA -->
+        <!-- value="AIzaSyCgT-2PxOdbQxKXw1rW6pEe4XweSW70P-g"  release-->
+        <!-- value="AIzaSyD2Mca-Vq1RY1oOrOMiq1xCtQFOO8-GC0Q"  debug-->
+
+
+    <meta-data
+        android:name="com.google.android.gms.version"
+        android:value="@integer/google_play_services_version" />
+
+    <!-- SUGAR ORM DATA -->
         <meta-data android:name="DATABASE" android:value="cade_busu.db" />
         <meta-data android:name="VERSION" android:value="1" />
         <meta-data android:name="QUERY_LOG" android:value="true" />

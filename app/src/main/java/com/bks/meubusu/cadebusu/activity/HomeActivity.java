@@ -65,7 +65,6 @@ public class HomeActivity extends AppCompatActivity {
         View v = inflator.inflate(R.layout.action_bar_custom_linhas, null);
 
         actionBar.setCustomView(v);
-
     }
 
     public void InicializaInputSearch(){
@@ -89,14 +88,18 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String newText) {
 //              if (searchView.isExpanded() && TextUtils.isEmpty(newText)) {
-                callSearch(newText);
+                    callSearch(newText);
 //              }
                 return true;
             }
 
             public void callSearch(final String query) {
-                listaLinhasAdapter.getFilter().filter(query);
-                listaLinhasAdapter.notifyDataSetInvalidated();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        listaLinhasAdapter.getFilter().filter(query);
+                    }
+                });
             }
         });
 

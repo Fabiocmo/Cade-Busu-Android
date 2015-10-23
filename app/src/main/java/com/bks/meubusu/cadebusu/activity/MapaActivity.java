@@ -317,6 +317,9 @@ public class MapaActivity extends AppCompatActivity {
             timer.cancel();
             timer = null;
         }
+        if (mMap != null){
+            mMap = null;
+        }
     }
 
 }
