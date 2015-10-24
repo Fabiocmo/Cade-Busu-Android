@@ -1,6 +1,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" tools:context=".HomeActivity">
-    <item android:id="@+id/action_settings" android:title="@string/action_settings"
-        android:orderInCategory="100" app:showAsAction="never" />
+
+    <item android:id="@+id/home_favorito"
+        android:layout_height="fill_parent"
+        android:layout_width="fill_parent"
+        android:title="Favorito"
+        app:showAsAction="ifRoom"
+        android:icon="@mipmap/ic_estrela_preta_vazia"/>
+
 </menu>

@@ -30,6 +30,7 @@ import com.bks.meubusu.cadebusu.model.LinhaDTO;
 import com.bks.meubusu.cadebusu.util.TransactionAction;
 import com.bks.meubusu.cadebusu.util.Util;
 import com.bks.meubusu.cadebusu.util.Webservice;
+import com.daimajia.swipe.SwipeLayout;
 
 import org.json.JSONException;
 
@@ -88,7 +89,7 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String newText) {
 //              if (searchView.isExpanded() && TextUtils.isEmpty(newText)) {
-                    callSearch(newText);
+                callSearch(newText);
 //              }
                 return true;
             }
@@ -117,6 +118,7 @@ public class HomeActivity extends AppCompatActivity {
 
         AjustaLayout();
         InicializaInputSearch();
+
         listaLinhas = (ListView) findViewById(R.id.listaLinhas);
 
         //Verifica se deve fazer a consulta ou nao
@@ -137,8 +139,6 @@ public class HomeActivity extends AppCompatActivity {
         listaLinhas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                int itemPosition = position;
-
                 LinhaDTO itemValue = (LinhaDTO) listaLinhas.getItemAtPosition(position);
 
                 Intent mapaIntent = new Intent(HomeActivity.this, MapaActivity.class);
@@ -152,7 +152,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.menu_home, menu);
+        getMenuInflater().inflate(R.menu.menu_home, menu);
         return true;
     }
 
@@ -163,11 +163,16 @@ public class HomeActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.home_favorito) {
+            if (!listaLinhasAdapter.isFavorito()){
+                item.setIcon(R.mipmap.ic_estrela_preta_cheia);
+                listaLinhasAdapter.setFavorito(true);
+            }else{
+                item.setIcon(R.mipmap.ic_estrela_preta_vazia);
+                listaLinhasAdapter.setFavorito(false);
+            }
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
