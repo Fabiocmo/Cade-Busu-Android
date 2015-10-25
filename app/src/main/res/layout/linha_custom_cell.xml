@@ -28,52 +28,57 @@
         android:layout_width="fill_parent"
         android:layout_height="78dp"
         android:background="#2E2E2E"
-        android:paddingLeft="16dp">
+        android:paddingLeft="10dp">
 
         <TextView
             android:id="@+id/codigoLinha"
-            android:layout_width="85dp"
-            android:layout_height="70dp"
+            android:layout_width="70dp"
+            android:layout_height="45dp"
             android:padding="1dp"
             android:gravity="center"
             android:text="201"
             android:textColor="#FFFFFF"
             android:textSize="38sp"
             android:textStyle="bold"
+            android:layout_alignParentLeft="false"
+            android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:singleLine="false" />
 
         <TextView
             android:id="@+id/tituloLinha"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:text="JARDIM CALIFORNIA"
-            android:layout_marginLeft="100dp"
             android:textColor="#FFFFFF"
             android:textSize="17sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            android:layout_alignTop="@+id/codigoLinha"
+            android:layout_toRightOf="@+id/codigoLinha"
+            android:layout_toEndOf="@+id/codigoLinha"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp" />
 
         <TextView
             android:id="@+id/empresaLinha"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tituloLinha"
             android:text="GRANDE LONDRINA"
             android:textColor="#FFFFFF"
-            android:layout_marginLeft="100dp"
-            android:layout_marginTop="0dp" />
+            android:layout_below="@+id/tituloLinha"
+            android:layout_alignLeft="@+id/tituloLinha"
+            android:layout_alignStart="@+id/tituloLinha" />
 
         <ImageView
             android:id="@+id/imagemSeta"
             android:background="@drawable/icon_seta"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:padding="100dp"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:layout_alignTop="@+id/tituloLinha" />
+            android:layout_alignTop="@+id/tituloLinha"
+            android:layout_marginTop="5dp" />
 
     </RelativeLayout>
 

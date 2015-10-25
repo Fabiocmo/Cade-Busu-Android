@@ -11,8 +11,11 @@ import android.widget.Toast;
 
 import com.bks.meubusu.cadebusu.R;
 import com.bks.meubusu.cadebusu.model.LinhaDTO;
+import com.daimajia.swipe.SimpleSwipeListener;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.BaseSwipeAdapter;
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,10 +63,9 @@ public class LinhaCustomItemAdapter extends BaseSwipeAdapter implements Filterab
 
     public void getFavoritos(boolean bl){
         ArrayList<LinhaDTO> resultados = new ArrayList<>();
-
-        if (bl == true){
+        if (bl){
             for (LinhaDTO linha : originalLinhaObjects){
-                if (linha.getlFavorito() == true) {
+                if (linha.getlFavorito()) {
                     resultados.add(linha);
                 }
             }
@@ -117,45 +119,24 @@ public class LinhaCustomItemAdapter extends BaseSwipeAdapter implements Filterab
     public View generateView(final int position, final ViewGroup parent) {
         View v = LayoutInflater.from(context).inflate(R.layout.linha_custom_cell, null);
         final SwipeLayout swipeLayout = (SwipeLayout)v.findViewById(getSwipeLayoutResourceId(position));
-        //swipeLayout.addSwipeListener(new SimpleSwipeListener() {
-        //    @Override
-        //    public void onOpen(SwipeLayout layout) {
-        //        YoYo.with(Techniques.Tada).duration(500).delay(100).playOn(layout.findViewById(R.id.favorito));
-        //    }
-        //});
+        swipeLayout.addSwipeListener(new SimpleSwipeListener() {
+            @Override
+            public void onOpen(SwipeLayout layout) {
+                YoYo.with(Techniques.Tada).duration(500).delay(100).playOn(layout.findViewById(R.id.favorito));
+            }
+        });
         swipeLayout.setOnDoubleClickListener(new SwipeLayout.DoubleClickListener() {
             @Override
             public void onDoubleClick(SwipeLayout layout, boolean surface) {
                 Toast.makeText(context, "DoubleClick", Toast.LENGTH_SHORT).show();
             }
         });
-        v.findViewById(R.id.favorito).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                LinhaDTO linhadto = displayLinhaObjects.get(position);
 
-                if (!linhadto.getlFavorito()){
-                    linhadto.setlFavorito(true);
-                    view.findViewById(R.id.favorito).setBackgroundResource(R.mipmap.ic_estrela_amarela_cheia);
-                }else{
-                    linhadto.setlFavorito(false);
-                    view.findViewById(R.id.favorito).setBackgroundResource(R.mipmap.ic_estrela_amarela_vazia);
-                }
-
-                swipeLayout.close(true);
-                linhadto.save();
-
-                if (blFavoritos){
-                    displayLinhaObjects.remove(position);
-                    notifyDataSetChanged();
-                }
-            }
-        });
         return v;
     }
 
     @Override
-    public void fillValues(int position, View convertView) {
+    public void fillValues(final int position, final View convertView) {
 
         TextView tCodigoLinha = (TextView) convertView.findViewById(R.id.codigoLinha);
         TextView tTituloLinha = (TextView) convertView.findViewById(R.id.tituloLinha);
@@ -172,6 +153,32 @@ public class LinhaCustomItemAdapter extends BaseSwipeAdapter implements Filterab
         }else{
             convertView.findViewById(R.id.favorito).setBackgroundResource(R.mipmap.ic_estrela_amarela_vazia);
         }
+
+        convertView.findViewById(R.id.favorito).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LinhaDTO linhadto = (LinhaDTO) getItem(position);
+
+                if (!linhadto.getlFavorito()){
+                    linhadto.setlFavorito(true);
+                    view.findViewById(R.id.favorito).setBackgroundResource(R.mipmap.ic_estrela_amarela_cheia);
+                }else{
+                    linhadto.setlFavorito(false);
+                    view.findViewById(R.id.favorito).setBackgroundResource(R.mipmap.ic_estrela_amarela_vazia);
+                }
+
+                //FECHA O SWIPE
+                SwipeLayout swipeLayout = (SwipeLayout)convertView.findViewById(getSwipeLayoutResourceId(position));
+                swipeLayout.close(true);
+
+                linhadto.save();
+
+                if (blFavoritos){
+                    displayLinhaObjects.remove(position);
+                    notifyDataSetChanged();
+                }
+            }
+        });
     }
 
 }

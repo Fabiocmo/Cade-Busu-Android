@@ -166,10 +166,18 @@ public class HomeActivity extends AppCompatActivity {
         if (id == R.id.home_favorito) {
             if (!listaLinhasAdapter.isFavorito()){
                 item.setIcon(R.mipmap.ic_estrela_preta_cheia);
-                listaLinhasAdapter.setFavorito(true);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        listaLinhasAdapter.setFavorito(true);
+                    }});
             }else{
                 item.setIcon(R.mipmap.ic_estrela_preta_vazia);
-                listaLinhasAdapter.setFavorito(false);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        listaLinhasAdapter.setFavorito(false);
+                    }});
             }
             return true;
         }
