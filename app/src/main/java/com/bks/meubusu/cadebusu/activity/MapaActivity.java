@@ -142,6 +142,16 @@ public class MapaActivity extends AppCompatActivity {
 
         mMap = fragment.getMap();
         mMap.setMyLocationEnabled(true);
+
+        mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+            @Override
+            public void onMapLoaded() {
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(-23.308337,-51.170274) , 13.0f));
+                if (listaMarkers.size() > 0){
+                    AplicaZoom(listaMarkers);
+                }
+            }
+        });
     }
 
     private void AtualizaPosicoesOnibus(){
@@ -166,11 +176,6 @@ public class MapaActivity extends AppCompatActivity {
             //Adiciona Marker na lista de referencias
             listaMarkers.add(marker);
         }
-
-        if (!primeiroZoom){
-            primeiroZoom = true;
-            AplicaZoom(listaMarkers);
-        }
     }
 
     private void AplicaZoom(List<Marker> mkList){
@@ -186,7 +191,7 @@ public class MapaActivity extends AppCompatActivity {
 
         LatLngBounds bounds = builder.build();
 
-        int padding = 0; // offset from edges of the map in pixels
+        int padding = 40; // offset from edges of the map in pixels
         CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
         mMap.animateCamera(cu);
     }
@@ -244,39 +249,32 @@ public class MapaActivity extends AppCompatActivity {
         if (mMap != null){
             MarcaTerminaisNoMapa();
             //ATUALIZA POSICOES DOS ONIBUS
-            try {
-                ws.getLocalizacaoOnibus(this, extras.getString("CODIGO_LINHA_SELECIONADA"),extras.getString("TITULO_LINHA_SELECIONADA"),new TransactionAction() {
-                    public void perform() {
-                        if (!ws.listaPosicoesOnibus.isEmpty()){
-                            listaPosicoesOnibus = ws.listaPosicoesOnibus;
-                            ContadorAtualizacao = 15;
-                            AtualizaPosicoesOnibus();
-                            InicializaTimer();
-                        } else {
-                            if (timer != null){
-                                timer.cancel();
-                                timer = null;
-                            }
-                            statusBar.setText("NENHUM ÔNIBUS ENCONTRADO");
+
+            ws.getLocalizacaoOnibus(this, extras.getString("CODIGO_LINHA_SELECIONADA"),extras.getString("TITULO_LINHA_SELECIONADA"),new TransactionAction() {
+                public void perform() {
+                    if (!ws.listaPosicoesOnibus.isEmpty()){
+                        listaPosicoesOnibus = ws.listaPosicoesOnibus;
+                        ContadorAtualizacao = 15;
+                        AtualizaPosicoesOnibus();
+                        InicializaTimer();
+                    } else {
+                        if (timer != null){
+                            timer.cancel();
+                            timer = null;
                         }
+                        statusBar.setText("NENHUM ÔNIBUS ENCONTRADO");
                     }
-                });
-            } catch (JSONException e) {
-                statusBar.setText("ERRO AO ATUALIZAR");
-                e.printStackTrace();
-            }
+                }
+            });
 
             //MARCA ITINERARIO NO MAPA
-            try {
-                ws.getIninerario(this, extras.getString("CODIGO_LINHA_SELECIONADA"), new TransactionAction() {
-                    public void perform() {
-                        listaItinerarios = ws.listaItinerarios;
-                        MarcaItinerarioNoMapa();
-                    }
-                });
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            ws.getIninerario(this, extras.getString("CODIGO_LINHA_SELECIONADA"), new TransactionAction() {
+                public void perform() {
+                    listaItinerarios = ws.listaItinerarios;
+                    MarcaItinerarioNoMapa();
+                }
+            });
+
         }
 
     }

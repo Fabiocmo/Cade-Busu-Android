@@ -5,11 +5,10 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
+import android.os.StrictMode;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,7 +18,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -28,20 +26,15 @@ import com.bks.meubusu.cadebusu.R;
 import com.bks.meubusu.cadebusu.adapter.LinhaCustomItemAdapter;
 import com.bks.meubusu.cadebusu.model.LinhaDTO;
 import com.bks.meubusu.cadebusu.util.TransactionAction;
-import com.bks.meubusu.cadebusu.util.Util;
 import com.bks.meubusu.cadebusu.util.Webservice;
-import com.daimajia.swipe.SwipeLayout;
 
 import org.json.JSONException;
 
-import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
 
     final Webservice ws = new Webservice();
-    final Util util = new Util();
 
     ListView listaLinhas ;
     SearchView inputSearch;
@@ -52,8 +45,6 @@ public class HomeActivity extends AppCompatActivity {
 
     public void AjustaLayout(){
         //MUDA COR DA ACTION BAR
-        setContentView(R.layout.activity_home);
-
         View view = this.getWindow().getDecorView();
         view.setBackgroundColor(Color.parseColor("#2E2E2E"));
 
@@ -115,14 +106,27 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        listaLinhas = (ListView) findViewById(R.id.listaLinhas);
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
 
         AjustaLayout();
         InicializaInputSearch();
 
-        listaLinhas = (ListView) findViewById(R.id.listaLinhas);
-
-        //Verifica se deve fazer a consulta ou nao
         List<LinhaDTO> linhas = LinhaDTO.listAll(LinhaDTO.class);
+
+        listaLinhas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                LinhaDTO itemValue = (LinhaDTO) listaLinhas.getItemAtPosition(position);
+
+                Intent mapaIntent = new Intent(HomeActivity.this, MapaActivity.class);
+                mapaIntent.putExtra("CODIGO_LINHA_SELECIONADA", itemValue.getlCodigo());
+                mapaIntent.putExtra("TITULO_LINHA_SELECIONADA", ((LinhaDTO) listaLinhas.getItemAtPosition(position)).getlNomeLinha());
+                HomeActivity.this.startActivity(mapaIntent);
+            }
+        });
 
         if (linhas.size() < 10) {
             try {
@@ -136,17 +140,6 @@ public class HomeActivity extends AppCompatActivity {
             RefreshTable(linhas);
         }
 
-        listaLinhas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                LinhaDTO itemValue = (LinhaDTO) listaLinhas.getItemAtPosition(position);
-
-                Intent mapaIntent = new Intent(HomeActivity.this, MapaActivity.class);
-                mapaIntent.putExtra("CODIGO_LINHA_SELECIONADA", itemValue.getlCodigo());
-                mapaIntent.putExtra("TITULO_LINHA_SELECIONADA", ((LinhaDTO) listaLinhas.getItemAtPosition(position)).getlNomeLinha());
-                HomeActivity.this.startActivity(mapaIntent);
-            }
-        });
     }
 
     @Override
