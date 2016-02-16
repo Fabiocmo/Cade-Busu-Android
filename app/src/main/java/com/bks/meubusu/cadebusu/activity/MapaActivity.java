@@ -2,6 +2,7 @@ package com.bks.meubusu.cadebusu.activity;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
@@ -19,6 +20,9 @@ import com.bks.meubusu.cadebusu.model.TerminalDTO;
 import com.bks.meubusu.cadebusu.util.TransactionAction;
 import com.bks.meubusu.cadebusu.util.Util;
 import com.bks.meubusu.cadebusu.util.Webservice;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -59,8 +63,13 @@ public class MapaActivity extends AppCompatActivity {
     private boolean primeiroZoom;
     Timer timer;
     Bundle extras = new Bundle();
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
-    private void AjustaLaout(){
+    private void AjustaLaout() {
         TextView textViewCodigoLinha = (TextView) findViewById(R.id.codigoLinha);
         TextView textViewTituloLinha = (TextView) findViewById(R.id.tituloLinha);
 
@@ -75,7 +84,7 @@ public class MapaActivity extends AppCompatActivity {
         actionBar.setDisplayShowCustomEnabled(true);
         actionBar.setDisplayShowTitleEnabled(false);
 
-        LayoutInflater inflator = (LayoutInflater) this .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflator = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View v = inflator.inflate(R.layout.action_bar_custom_localizacao, null);
 
         actionBar.setCustomView(v);
@@ -85,8 +94,8 @@ public class MapaActivity extends AppCompatActivity {
         statusBar.setText("ATUALIZANDO...");
     }
 
-    private void InicializaTimer(){
-        if (timer == null){
+    private void InicializaTimer() {
+        if (timer == null) {
             timer = new Timer();
             timer.scheduleAtFixedRate(new TimerTask() {
                 @Override
@@ -103,13 +112,13 @@ public class MapaActivity extends AppCompatActivity {
 
     }
 
-    private void AtualizaBarraStatus(){
-        if (ContadorAtualizacao < 1){
+    private void AtualizaBarraStatus() {
+        if (ContadorAtualizacao < 1) {
             try {
                 statusBar.setText("ATUALIZANDO...");
-                ws.getLocalizacaoOnibus(this, extras.getString("CODIGO_LINHA_SELECIONADA"),extras.getString("TITULO_LINHA_SELECIONADA"),new TransactionAction() {
+                ws.getLocalizacaoOnibus(this, extras.getString("CODIGO_LINHA_SELECIONADA"), extras.getString("TITULO_LINHA_SELECIONADA"), new TransactionAction() {
                     public void perform() {
-                        if (ws.listaPosicoesOnibus.size() > 0){
+                        if (ws.listaPosicoesOnibus.size() > 0) {
                             listaPosicoesOnibus = ws.listaPosicoesOnibus;
                             ContadorAtualizacao = 15;
                             AtualizaPosicoesOnibus();
@@ -118,7 +127,7 @@ public class MapaActivity extends AppCompatActivity {
                         }
                     }
                 });
-            } catch (Exception e){
+            } catch (Exception e) {
                 statusBar.setText("ERRO AO ATUALIZAR");
             }
         } else {
@@ -128,7 +137,7 @@ public class MapaActivity extends AppCompatActivity {
 
     }
 
-    private void InicializaMapa(){
+    private void InicializaMapa() {
         listaMarkers = new ArrayList<Marker>();
 
         FragmentManager fm = getSupportFragmentManager();
@@ -146,28 +155,28 @@ public class MapaActivity extends AppCompatActivity {
         mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
             @Override
             public void onMapLoaded() {
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(-23.308337,-51.170274) , 13.0f));
-                if (listaMarkers.size() > 0){
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(-23.308337, -51.170274), 13.0f));
+                if (listaMarkers.size() > 0) {
                     AplicaZoom(listaMarkers);
                 }
             }
         });
     }
 
-    private void AtualizaPosicoesOnibus(){
+    private void AtualizaPosicoesOnibus() {
         //Remove markers do mapa
-        for (Marker mark: listaMarkers){
+        for (Marker mark : listaMarkers) {
             mark.remove();
         }
         listaMarkers.clear();
 
         //Cria novos markers e adiciona no mapa
-        for (OnibusDTO onibus: listaPosicoesOnibus){
-            MarkerOptions mk =  new MarkerOptions().position(
+        for (OnibusDTO onibus : listaPosicoesOnibus) {
+            MarkerOptions mk = new MarkerOptions().position(
                     new LatLng(onibus.getoLatitude(),
                             onibus.getoLongitude())).title(
-                            onibus.getTituloLinha()).snippet(
-                            onibus.getoSentido());
+                    onibus.getTituloLinha()).snippet(
+                    onibus.getoSentido());
 
             mk.icon(BitmapDescriptorFactory.fromResource(R.mipmap.icone_onibus));
 
@@ -178,14 +187,14 @@ public class MapaActivity extends AppCompatActivity {
         }
     }
 
-    private void AplicaZoom(List<Marker> mkList){
+    private void AplicaZoom(List<Marker> mkList) {
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
         for (Marker marker : mkList) {
             builder.include(marker.getPosition());
         }
 
         //Adiciona a posicao do usuario ao zoom
-        if (mMap.getMyLocation() != null){
+        if (mMap.getMyLocation() != null) {
             builder.include(new LatLng(mMap.getMyLocation().getLatitude(), mMap.getMyLocation().getLongitude()));
         }
 
@@ -196,9 +205,9 @@ public class MapaActivity extends AppCompatActivity {
         mMap.animateCamera(cu);
     }
 
-    private void MarcaTerminaisNoMapa(){
-        for (TerminalDTO terminal: util.RetornaTerminais()){
-            MarkerOptions mk =  new MarkerOptions().position(
+    private void MarcaTerminaisNoMapa() {
+        for (TerminalDTO terminal : util.RetornaTerminais()) {
+            MarkerOptions mk = new MarkerOptions().position(
                     new LatLng(terminal.gettLatitude(),
                             terminal.gettLongitude())).title(
                     terminal.gettNome());
@@ -208,14 +217,14 @@ public class MapaActivity extends AppCompatActivity {
         }
     }
 
-    private void MarcaItinerarioNoMapa(){
+    private void MarcaItinerarioNoMapa() {
         Polyline line;
 
         for (int i = 0; i < listaItinerarios.size(); i++) {
             PolylineOptions optionsIda = new PolylineOptions().width(5).color(Color.BLUE).geodesic(true);
             for (int z = 0; z < listaItinerarios.get(i).getIda().size(); z++) {
                 LatLng point = new LatLng(listaItinerarios.get(i).getIda().get(z).getLatitude(),
-                                    listaItinerarios.get(i).getIda().get(z).getLongitude());
+                        listaItinerarios.get(i).getIda().get(z).getLongitude());
                 optionsIda.add(point);
             }
             mMap.addPolyline(optionsIda);
@@ -242,41 +251,53 @@ public class MapaActivity extends AppCompatActivity {
 
         try {
             InicializaMapa();
-        } catch (Exception e){
+        } catch (Exception e) {
 
         }
 
-        if (mMap != null){
+        if (mMap != null) {
             MarcaTerminaisNoMapa();
             //ATUALIZA POSICOES DOS ONIBUS
 
-            ws.getLocalizacaoOnibus(this, extras.getString("CODIGO_LINHA_SELECIONADA"),extras.getString("TITULO_LINHA_SELECIONADA"),new TransactionAction() {
-                public void perform() {
-                    if (!ws.listaPosicoesOnibus.isEmpty()){
-                        listaPosicoesOnibus = ws.listaPosicoesOnibus;
-                        ContadorAtualizacao = 15;
-                        AtualizaPosicoesOnibus();
-                        InicializaTimer();
-                    } else {
-                        if (timer != null){
-                            timer.cancel();
-                            timer = null;
+            try {
+                ws.getLocalizacaoOnibus(this, extras.getString("CODIGO_LINHA_SELECIONADA"),extras.getString("TITULO_LINHA_SELECIONADA"),new TransactionAction() {
+                    public void perform() {
+                        if (!ws.listaPosicoesOnibus.isEmpty()){
+                            listaPosicoesOnibus = ws.listaPosicoesOnibus;
+                            ContadorAtualizacao = 15;
+                            AtualizaPosicoesOnibus();
+                            InicializaTimer();
+                        } else {
+                            if (timer != null){
+                                timer.cancel();
+                                timer = null;
+                            }
+                            statusBar.setText("NENHUM ÔNIBUS ENCONTRADO");
                         }
-                        statusBar.setText("NENHUM ÔNIBUS ENCONTRADO");
                     }
-                }
-            });
+                });
+            } catch (JSONException e) {
+                statusBar.setText("ERRO AO ATUALIZAR");
+                e.printStackTrace();
+            }
 
             //MARCA ITINERARIO NO MAPA
-            ws.getIninerario(this, extras.getString("CODIGO_LINHA_SELECIONADA"), new TransactionAction() {
-                public void perform() {
-                    listaItinerarios = ws.listaItinerarios;
-                    MarcaItinerarioNoMapa();
-                }
-            });
+            try {
+                ws.getIninerario(this, extras.getString("CODIGO_LINHA_SELECIONADA"), new TransactionAction() {
+                    public void perform() {
+                        listaItinerarios = ws.listaItinerarios;
+                        MarcaItinerarioNoMapa();
+                    }
+                });
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
         }
 
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     @Override
@@ -303,21 +324,60 @@ public class MapaActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onDestroy(){
+    public void onDestroy() {
         super.onDestroy();
-        if (!ws.listaPosicoesOnibus.isEmpty()){
+        if (!ws.listaPosicoesOnibus.isEmpty()) {
             ws.listaPosicoesOnibus.clear();
         }
-        if (!listaMarkers.isEmpty()){
+        if (!listaMarkers.isEmpty()) {
             listaMarkers.clear();
         }
-        if (timer != null){
+        if (timer != null) {
             timer.cancel();
             timer = null;
         }
-        if (mMap != null){
+        if (mMap != null) {
             mMap = null;
         }
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Mapa Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://com.bks.meubusu.cadebusu.activity/http/host/path")
+        );
+        AppIndex.AppIndexApi.start(client, viewAction);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Mapa Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://com.bks.meubusu.cadebusu.activity/http/host/path")
+        );
+        AppIndex.AppIndexApi.end(client, viewAction);
+        client.disconnect();
+    }
 }

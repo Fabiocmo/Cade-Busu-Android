@@ -94,7 +94,6 @@ public class HomeActivity extends AppCompatActivity {
                 });
             }
         });
-
     }
 
     private void RefreshTable(List<LinhaDTO> novaLista){
