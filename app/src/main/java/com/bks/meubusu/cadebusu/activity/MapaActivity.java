@@ -116,7 +116,7 @@ public class MapaActivity extends AppCompatActivity {
         if (ContadorAtualizacao < 1) {
             try {
                 statusBar.setText("ATUALIZANDO...");
-                ws.getLocalizacaoOnibus(this, extras.getString("CODIGO_LINHA_SELECIONADA"), extras.getString("TITULO_LINHA_SELECIONADA"), new TransactionAction() {
+                ws.getLocalizacaoOnibus(extras.getString("CODIGO_LINHA_SELECIONADA"), extras.getString("TITULO_LINHA_SELECIONADA"), new TransactionAction() {
                     public void perform() {
                         if (ws.listaPosicoesOnibus.size() > 0) {
                             listaPosicoesOnibus = ws.listaPosicoesOnibus;
@@ -260,7 +260,7 @@ public class MapaActivity extends AppCompatActivity {
             //ATUALIZA POSICOES DOS ONIBUS
 
             try {
-                ws.getLocalizacaoOnibus(this, extras.getString("CODIGO_LINHA_SELECIONADA"),extras.getString("TITULO_LINHA_SELECIONADA"),new TransactionAction() {
+                ws.getLocalizacaoOnibus(extras.getString("CODIGO_LINHA_SELECIONADA"),extras.getString("TITULO_LINHA_SELECIONADA"),new TransactionAction() {
                     public void perform() {
                         if (!ws.listaPosicoesOnibus.isEmpty()){
                             listaPosicoesOnibus = ws.listaPosicoesOnibus;
@@ -345,39 +345,39 @@ public class MapaActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
 
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "Mapa Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app deep link URI is correct.
-                Uri.parse("android-app://com.bks.meubusu.cadebusu.activity/http/host/path")
-        );
-        AppIndex.AppIndexApi.start(client, viewAction);
+//        // ATTENTION: This was auto-generated to implement the App Indexing API.
+//        // See https://g.co/AppIndexing/AndroidStudio for more information.
+//        client.connect();
+//        Action viewAction = Action.newAction(
+//                Action.TYPE_VIEW, // TODO: choose an action type.
+//                "Mapa Page", // TODO: Define a title for the content shown.
+//                // TODO: If you have web page content that matches this app activity's content,
+//                // make sure this auto-generated web page URL is correct.
+//                // Otherwise, set the URL to null.
+//                Uri.parse("http://host/path"),
+//                // TODO: Make sure this auto-generated app deep link URI is correct.
+//                Uri.parse("android-app://com.bks.meubusu.cadebusu.activity/http/host/path")
+//        );
+//        AppIndex.AppIndexApi.start(client, viewAction);
     }
 
     @Override
     public void onStop() {
         super.onStop();
 
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "Mapa Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app deep link URI is correct.
-                Uri.parse("android-app://com.bks.meubusu.cadebusu.activity/http/host/path")
-        );
-        AppIndex.AppIndexApi.end(client, viewAction);
-        client.disconnect();
+//        // ATTENTION: This was auto-generated to implement the App Indexing API.
+//        // See https://g.co/AppIndexing/AndroidStudio for more information.
+//        Action viewAction = Action.newAction(
+//                Action.TYPE_VIEW, // TODO: choose an action type.
+//                "Mapa Page", // TODO: Define a title for the content shown.
+//                // TODO: If you have web page content that matches this app activity's content,
+//                // make sure this auto-generated web page URL is correct.
+//                // Otherwise, set the URL to null.
+//                Uri.parse("http://host/path"),
+//                // TODO: Make sure this auto-generated app deep link URI is correct.
+//                Uri.parse("android-app://com.bks.meubusu.cadebusu.activity/http/host/path")
+//        );
+//        AppIndex.AppIndexApi.end(client, viewAction);
+//        client.disconnect();
     }
 }

@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/CadeBusu.iml" filepath="$PROJECT_DIR$/CadeBusu.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Cade-Busu-Android-Github.iml" filepath="$PROJECT_DIR$/Cade-Busu-Android-Github.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

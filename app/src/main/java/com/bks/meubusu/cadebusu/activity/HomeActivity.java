@@ -232,7 +232,7 @@ public class HomeActivity extends AppCompatActivity {
         }else{
             mostrarCarregando();
             mProgressDialog.show();
-            ws.getListaLinhas(this, new TransactionAction() {
+            ws.getListaLinhas(new TransactionAction() {
                 public void perform() {
                     for (LinhaDTO item: ws.listaLinhas){
                         item.save();
