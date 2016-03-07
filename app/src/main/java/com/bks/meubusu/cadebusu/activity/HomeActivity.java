@@ -9,10 +9,9 @@ import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.StrictMode;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -44,19 +43,8 @@ public class HomeActivity extends AppCompatActivity {
     AlertDialog.Builder alertDialogBuilder;
 
     public void AjustaLayout(){
-        //MUDA COR DA ACTION BAR
-        View view = this.getWindow().getDecorView();
-        view.setBackgroundColor(Color.parseColor("#2E2E2E"));
-
-        //AJUSTA ACTION BAR
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowCustomEnabled(true);
-        actionBar.setDisplayShowTitleEnabled(false);
-
-        LayoutInflater inflator = (LayoutInflater) this .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View v = inflator.inflate(R.layout.action_bar_custom_linhas, null);
-
-        actionBar.setCustomView(v);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
     }
 
     public void InicializaInputSearch(){
@@ -120,7 +108,7 @@ public class HomeActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 LinhaDTO itemValue = (LinhaDTO) listaLinhas.getItemAtPosition(position);
 
-                Intent mapaIntent = new Intent(HomeActivity.this, MapaActivity.class);
+                Intent mapaIntent = new Intent(HomeActivity.this, MapsActivity.class);
                 mapaIntent.putExtra("CODIGO_LINHA_SELECIONADA", itemValue.getlCodigo());
                 mapaIntent.putExtra("TITULO_LINHA_SELECIONADA", ((LinhaDTO) listaLinhas.getItemAtPosition(position)).getlNomeLinha());
                 HomeActivity.this.startActivity(mapaIntent);
@@ -157,14 +145,14 @@ public class HomeActivity extends AppCompatActivity {
 
         if (id == R.id.home_favorito) {
             if (!listaLinhasAdapter.isFavorito()){
-                item.setIcon(R.mipmap.ic_estrela_preta_cheia);
+                item.setIcon(R.drawable.ic_star_filled);
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         listaLinhasAdapter.setFavorito(true);
                     }});
             }else{
-                item.setIcon(R.mipmap.ic_estrela_preta_vazia);
+                item.setIcon(R.drawable.ic_star);
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

@@ -7,6 +7,6 @@
         android:layout_width="fill_parent"
         android:title="Favorito"
         app:showAsAction="ifRoom"
-        android:icon="@mipmap/ic_estrela_preta_vazia"/>
+        android:icon="@drawable/ic_star"/>
 
 </menu>

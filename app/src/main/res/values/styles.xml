@@ -1,10 +1,22 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">#FDE32E</item>
+        <item name="colorPrimary">@color/amarelo_cadebusu</item>
+        <item name="colorPrimaryDark">@color/amarelo_cadebusu_escuro</item>
+        <item name="colorAccent">@color/branco</item>
+        <item name="android:textColorPrimary">@color/preto</item>
+        <item name="android:colorBackground">@color/preto</item>
     </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+
 
 </resources>

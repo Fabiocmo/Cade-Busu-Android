@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="branco">#ffffff</color>
+    <color name="cinza">#616161</color>
+    <color name="preto">#2E2E2E</color>
+    <color name="amarelo_cadebusu">#edb92a</color>
+    <color name="amarelo_cadebusu_escuro">#edb92a</color>
+    <color name="colorBackground">#777777</color>
+    <color name="background_material_light">#ffffff</color>
+    <color name="secondary_text_material_light">#2E2E2E</color>
+    <color name="primary_text_material_dark">#2E2E2E</color>
+    <color name="secondary_text_material_dark">#2E2E2E</color>
+</resources>

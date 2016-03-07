@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="com.bks.meubusu.cadebusu.activity.HomeActivity">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:weightSum="1">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar_maps"
+            android:title="Localização"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:popupTheme="@style/AppTheme.PopupOverlay">
+
+        </android.support.v7.widget.Toolbar>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="78dp"
+                android:background="#2E2E2E"
+                android:paddingLeft="16dp">
+
+                <TextView
+                    android:id="@+id/codigoLinha"
+                    android:layout_width="70dp"
+                    android:layout_height="45dp"
+                    android:padding="1dp"
+                    android:gravity="center"
+                    android:text="201"
+                    android:textColor="#FFFFFF"
+                    android:textSize="38sp"
+                    android:textStyle="bold"
+                    android:layout_alignParentLeft="false"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:singleLine="false" />
+
+                <TextView
+                    android:id="@+id/tituloLinha"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="JARDIM CALIFORNIA"
+                    android:textColor="#FFFFFF"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:layout_alignTop="@+id/codigoLinha"
+                    android:layout_toRightOf="@+id/codigoLinha"
+                    android:layout_toEndOf="@+id/codigoLinha"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp" />
+
+                <TextView
+                    android:id="@+id/empresaLinha"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="GRANDE LONDRINA"
+                    android:textColor="#FFFFFF"
+                    android:layout_below="@+id/tituloLinha"
+                    android:layout_alignLeft="@+id/tituloLinha"
+                    android:layout_alignStart="@+id/tituloLinha" />
+
+            </RelativeLayout>
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/map_frame"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0">
+
+            <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:map="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/map"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context="com.bks.meubusu.cadebusu.activity.MapsActivity" />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0.2"
+            android:background="#2E2E2E">
+
+            <TextView
+                android:id="@+id/statusLinha"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="PROXIMA ATUALIZACAO EM 15 SEGUNDOS"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+
+</android.support.design.widget.CoordinatorLayout>
+
+
