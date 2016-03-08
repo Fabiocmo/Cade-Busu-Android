@@ -5,7 +5,7 @@ import com.orm.SugarRecord;
 /**
  * Created by raullermen on 9/13/15.
  */
-public class LinhaDTO extends SugarRecord<LinhaDTO> {
+public class LinhaDTO extends SugarRecord {
 
     private String lCodigo;
     private String lNomeLinha;

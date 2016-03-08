@@ -12,6 +12,7 @@ import com.bks.meubusu.cadebusu.R;
 import com.bks.meubusu.cadebusu.model.ItinerarioDTO;
 import com.bks.meubusu.cadebusu.model.OnibusDTO;
 import com.bks.meubusu.cadebusu.model.TerminalDTO;
+import com.bks.meubusu.cadebusu.util.GlobalClass;
 import com.bks.meubusu.cadebusu.util.TransactionAction;
 import com.bks.meubusu.cadebusu.util.Util;
 import com.bks.meubusu.cadebusu.util.Webservice;
@@ -39,7 +40,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
 
-    final Webservice ws = new Webservice();
+    Webservice ws;
     final Util util = new Util();
 
     public static int ContadorAtualizacao;
@@ -64,6 +65,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         AjustaLaout();
+
+        ws = ((GlobalClass) getApplicationContext()).webservice;
     }
 
     private boolean checkLocationPermission()
@@ -283,9 +286,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (timer != null) {
             timer.cancel();
             timer = null;
-        }
-        if (mMap != null) {
-            mMap = null;
         }
     }
 }

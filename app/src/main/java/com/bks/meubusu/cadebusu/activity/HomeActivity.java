@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.bks.meubusu.cadebusu.R;
 import com.bks.meubusu.cadebusu.adapter.LinhaCustomItemAdapter;
 import com.bks.meubusu.cadebusu.model.LinhaDTO;
+import com.bks.meubusu.cadebusu.util.GlobalClass;
 import com.bks.meubusu.cadebusu.util.TransactionAction;
 import com.bks.meubusu.cadebusu.util.Webservice;
 
@@ -32,8 +33,6 @@ import org.json.JSONException;
 import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
-
-    final Webservice ws = new Webservice();
 
     ListView listaLinhas ;
     SearchView inputSearch;
@@ -115,8 +114,11 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        if (linhas.size() < 10) {
+        if (linhas.size() < 120) {
             try {
+                for (LinhaDTO item : linhas) {
+                    item.delete();
+                }
                 getLinhasWebService();
             } catch (JSONException e) {
                 mProgressDialog.dismiss();
@@ -181,6 +183,7 @@ public class HomeActivity extends AppCompatActivity {
             mProgressDialog = new ProgressDialog(this);
             mProgressDialog.setMessage("Carregando linhas... ");
             mProgressDialog.setIndeterminate(false);
+            mProgressDialog.setCancelable(false);
         }
     }
 
@@ -218,6 +221,7 @@ public class HomeActivity extends AppCompatActivity {
         if (!isNetworkAvailable()){
             mostrarAlertaTentarNovamente();
         }else{
+            final Webservice ws = ((GlobalClass) getApplicationContext()).webservice;
             mostrarCarregando();
             mProgressDialog.show();
             ws.getListaLinhas(new TransactionAction() {

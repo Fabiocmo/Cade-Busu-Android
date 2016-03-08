@@ -42,7 +42,7 @@ public class Webservice {
 
     public void getListaLinhas(final TransactionAction completion) throws JSONException {
 
-        GrandeLondrinaInterface apiService = retrofit.create(GrandeLondrinaInterface.class);
+        final GrandeLondrinaInterface apiService = retrofit.create(GrandeLondrinaInterface.class);
         Call<ResponseBody> result = apiService.getListaLinhas("Linhas Convencionais");
 
         result.enqueue(new Callback<ResponseBody>() {
@@ -50,6 +50,36 @@ public class Webservice {
             public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
                 try {
                     listaLinhas = parse.ConverteListaLinhas(response.body().string().toString());
+                    getListaLinhasPSIU(completion);
+                } catch (IOException e) {
+                    Log.v("ERRO", "Exception caught : ", e);
+                    completion.perform();
+                }catch (JSONException e)
+                {
+                    Log.v("ERRO", "Exception caught : ", e);
+                    completion.perform();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                completion.perform();
+            }
+        });
+    }
+
+    public void getListaLinhasPSIU(final TransactionAction completion) throws JSONException {
+
+        final GrandeLondrinaInterface apiService = retrofit.create(GrandeLondrinaInterface.class);
+        Call<ResponseBody> result = apiService.getListaLinhas("Linhas PSIU");
+
+        result.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+                try {
+                    for (LinhaDTO item :parse.ConverteListaLinhas(response.body().string().toString())) {
+                        listaLinhas.add(item);
+                    }
                     completion.perform();
                 } catch (IOException e) {
                     Log.v("ERRO", "Exception caught : ", e);
@@ -66,7 +96,6 @@ public class Webservice {
                 completion.perform();
             }
         });
-
     }
 
     public void getLocalizacaoOnibus(final String CodigoLinha, final String NomeLinha, final TransactionAction completion ) throws JSONException {

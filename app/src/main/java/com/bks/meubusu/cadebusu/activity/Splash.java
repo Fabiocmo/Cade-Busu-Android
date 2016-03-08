@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 
 import com.bks.meubusu.cadebusu.R;
+import com.bks.meubusu.cadebusu.util.GlobalClass;
 
 import java.util.Locale;
 
