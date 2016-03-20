@@ -7,6 +7,7 @@
         <item name="colorAccent">@color/branco</item>
         <item name="android:textColorPrimary">@color/preto</item>
         <item name="android:colorBackground">@color/preto</item>
+        <item name="android:windowBackground">@color/preto</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
